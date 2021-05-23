@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"encoding/json"
         . "github.com/hginigo/el/elhuyar"
 )
 
@@ -21,10 +20,11 @@ func main() {
         return
     }
 
-    enc := json.NewEncoder(os.Stdout)
-    enc.SetIndent("", "    ")
-    enc.Encode(res)
+    // enc := json.NewEncoder(os.Stdout)
+    // enc.SetIndent("", "    ")
+    // enc.Encode(res)
 
+    FprintResult(res, os.Stdout)
     // res, err := json.Marshal(queryList)
     // if err != nil {
     //     fmt.Fprintln(os.Stderr, "Unexpected error")

@@ -22,3 +22,12 @@ type Example struct {
     Translation  string  `json:"translation"`
 }
 
+const (
+    Red = "\033[31m"
+    Yel = "\033[33m"
+    Blu = "\033[34m"
+    Whi = "\033[37m"
+    Def = "\033[39;49m"
+    Void = ""
+)
+

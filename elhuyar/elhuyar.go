@@ -1,6 +1,7 @@
 package elhuyar
 
 import (
+    "io"
     "os"
     "fmt"
     "time"
@@ -9,7 +10,7 @@ import (
     "github.com/gocolly/colly"
 )
 
-const ELH_URL = "https://hiztegiak.elhuyar.eus/eu_es/"
+const ELH_URL = "https://hiztegiak.elhuyar.eus/eu_es_en_fr/"
 
 func FetchResult(query string) ([]Translation, error) {
     translationList := make([]Translation, 0)
@@ -87,3 +88,50 @@ func printWait() {
     }
 }
 
+func FprintResult(ts []Translation, w io.Writer) {
+    var col string
+    var t Translation
+    var e Entry
+    var x Example
+
+    for i := range ts {
+        t = ts[i]
+        col = getColor(t.From, t.To)
+        fmt.Fprintf(w, "%s| %s > %s%s\n", col, t.From, t.To, Def)
+
+        for j := range t.Entries {
+            e = t.Entries[j]
+            fmt.Fprintf(w, "%s|  %d %s%s %s%s\n", col, j+1, e.Sort, Whi, fmtStrList(e.Entry), Def)
+
+            for k := range e.Examples {
+                x = e.Examples[k]
+                fmt.Fprintf(w, "%s|    %s%s%s -> %s%s\n", col, Whi, x.Sentence, col, Def, x.Translation)
+            }
+            // Do not print separation line if it is the last entry
+            if j < len(t.Entries) - 1 {
+                fmt.Fprintf(w, "%s|%s\n", col, Def)
+            }
+        }
+        fmt.Fprintln(w)
+    }
+}
+
+func fmtStrList(s []string) string {
+    if len(s) == 0 {
+        return ""
+    }
+    var res string = s[0]
+    for i := range s[1:] {
+        res += ", " + s[i]
+    }
+    return res
+}
+
+func getColor(from, to string) string {
+    if from == "es" || to == "es" {
+        return Red
+    } else if from == "fr" || to == "fr" {
+        return Blu
+    }
+    return Yel
+}
